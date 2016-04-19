@@ -1,7 +1,7 @@
-from django.http.response import JsonResponse
 from rest_framework.decorators import api_view
 from techson_server.settings import BASE_DIR
-import pickle
+from rest_framework.response import Response
+import pickle, json
 
 
 # Create your views here.
@@ -12,5 +12,7 @@ def run(request):
     with open(path, 'rb') as f:
         classifier = pickle.load(f)
     data = request.data['image'].split(",")
-    predict = classifier.predict(data)[0]
-    return JsonResponse(str(predict), safe=False)
+    predict = classifier.predict_proba(data)[0]
+    keys = list(range(10))
+    result = dict(zip(keys, predict))
+    return Response(result)
