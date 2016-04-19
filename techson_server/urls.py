@@ -15,7 +15,8 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
+from random_forest.views import run
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
+    url('^api/v1/random_forest/$', run)
 ]
