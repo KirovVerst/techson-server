@@ -122,12 +122,12 @@ def create_random_name(file_extension):
 def validate_file(file_obj):
     file_type = file_obj.name.split('.')
     if len(file_type) == 1:
-        raise exceptions.ValidationError('File without type is not supported', status=400)
+        raise exceptions.ValidationError('File without type is not supported')
 
     file_type = file_type[len(file_type) - 1]
 
     if str.lower(str(file_type)) in UPLOAD_FILE_TYPES:
         pass
     else:
-        raise exceptions.ValidationError("File type '.%s' is not supported" % file_type, status=400)
+        raise exceptions.ValidationError("File type '.%s' is not supported" % file_type)
     return file_type
