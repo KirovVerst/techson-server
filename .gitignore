@@ -98,3 +98,5 @@ db/csv/
 
 api/users.json
 media/*
+static/*
+techson_server/static/*
