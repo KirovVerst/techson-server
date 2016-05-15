@@ -1,7 +1,7 @@
 from rest_framework.decorators import api_view
 from techson_server.settings import BASE_DIR
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, exceptions
 from django.contrib.auth.models import User
 from api.serializers import UserSerializer
 import pickle, json, os
@@ -58,10 +58,13 @@ DIR = os.path.dirname(__file__)
 @api_view(['GET'])
 def initial_data(request):
     users = []
-    with open(os.path.join(DIR, 'users.json'), encoding='utf-8') as data_file:
-        json_data = json.load(data_file)
-        for data in json_data:
-            user, created = User.objects.get_or_create(username=data['username'], defaults=data)
-            users.append(user)
-    serializer = UserSerializer(users, many=True)
+    try:
+        with open(os.path.join(DIR, 'users.json'), encoding='utf-8') as data_file:
+            json_data = json.load(data_file)
+            for data in json_data:
+                user, created = User.objects.get_or_create(username=data['username'], defaults=data)
+                users.append(user)
+        serializer = UserSerializer(users, many=True)
+    except Exception:
+        return Response("File not found.", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     return Response(data=serializer.data, status=status.HTTP_200_OK)
