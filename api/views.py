@@ -1,10 +1,15 @@
+from django.shortcuts import get_object_or_404
+
 from rest_framework.decorators import api_view
 from techson_server.settings import BASE_DIR
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, exceptions
 from django.contrib.auth.models import User
-from api.serializers import UserSerializer
-import pickle, json, os
+from api.serializers import UserSerializer, InputDataSerializer, ImageSerializer
+from api.models import Image
+from techson_server.settings import MEDIA_ROOT, UPLOAD_FILE_TYPES
+
+import pickle, json, os, random, string
 
 
 # Create your views here.
@@ -68,3 +73,63 @@ def initial_data(request):
     except Exception:
         return Response("File not found.", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(["POST"])
+def load_image(request):
+    input_data = InputDataSerializer(data=request.data)
+    input_data.is_valid(raise_exception=True)
+    try:
+
+        file_obj = request.FILES['image']
+        file_extension = validate_file(file_obj)
+        dir_path = get_or_create_dir(input_data.data['label'])
+
+        old_name = file_obj.name
+        new_name = create_random_name(file_extension)
+
+        file_path = dir_path + "/" + new_name
+
+        with open(file_path, "wb") as destination:
+            for chunk in file_obj.chunks():
+                destination.write(chunk)
+        destination.close()
+
+    except Exception:
+        return Response("File not found")
+
+    user = get_object_or_404(User, id=input_data.data['user'])
+
+    image = Image.objects.create(user=user, label=input_data.data['label'],
+                                 new_name=new_name, old_name=old_name, image=file_path)
+
+    return Response(ImageSerializer(image).data)
+
+
+def get_or_create_dir(label):
+    if not os.path.exists(MEDIA_ROOT):
+        os.makedirs(MEDIA_ROOT)
+    dir_path = MEDIA_ROOT + "/" + str(label)
+    if not os.path.exists(dir_path):
+        os.makedirs(dir_path)
+    return dir_path
+
+
+def create_random_name(file_extension):
+    s = ''.join(random.SystemRandom().choice(string.ascii_lowercase + string.digits) for _ in range(50))
+    s += '.' + file_extension
+    return s
+
+
+def validate_file(file_obj):
+    file_type = file_obj.name.split('.')
+    if len(file_type) == 1:
+        raise exceptions.ValidationError('File without type is not supported')
+
+    file_type = file_type[len(file_type) - 1]
+
+    if str.lower(str(file_type)) in UPLOAD_FILE_TYPES:
+        pass
+    else:
+        raise exceptions.ValidationError("File type '.%s' is not supported" % file_type)
+    return file_type
