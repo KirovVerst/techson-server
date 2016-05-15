@@ -35,7 +35,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'random_forest'
+    'api'
 ]
 
 MIDDLEWARE_CLASSES = [
