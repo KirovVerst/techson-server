@@ -93,8 +93,8 @@ def load_image(request):
                 destination.write(chunk)
         destination.close()
 
-    except Exception:
-        return Response("File not found")
+    except Exception as e:
+        return Response(str(e))
 
     user = get_object_or_404(User, id=input_data.data['user'])
 
