@@ -14,5 +14,7 @@ RFC = RandomForestClassifier(n_estimators=200, n_jobs=-1)
 
 RFC.fit(x_train, y_train)
 
-with open('classifier.pkl', 'wb') as f:
+path = BASE_DIR + '/classifiers/random_forest_classifier.pkl'
+
+with open(path, 'wb') as f:
     pickle.dump(RFC, f)

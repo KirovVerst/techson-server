@@ -1,7 +1,7 @@
 from rest_framework.decorators import api_view
 from techson_server.settings import BASE_DIR
 from rest_framework.response import Response
-from rest_framework import status, exceptions
+from rest_framework import status
 from django.contrib.auth.models import User
 from api.serializers import UserSerializer
 import pickle, json, os
@@ -11,7 +11,7 @@ import pickle, json, os
 
 @api_view(['POST'])
 def random_forest(request):
-    path = BASE_DIR + "/api/classifier.pkl"
+    path = BASE_DIR + "/classifiers/random_forest_classifier.pkl"
     with open(path, 'rb') as f:
         classifier = pickle.load(f)
     data = request.data['image'].split(",")
@@ -23,7 +23,7 @@ def random_forest(request):
 
 @api_view(['POST'])
 def neural_network(request):
-    path = BASE_DIR + "/api/classifier.pkl"
+    path = BASE_DIR + "/classifiers/random_forest_classifier.pkl"
     with open(path, 'rb') as f:
         classifier = pickle.load(f)
     data = request.data['image'].split(",")
@@ -35,7 +35,7 @@ def neural_network(request):
 
 @api_view(['POST'])
 def gradient_boosting(request):
-    path = BASE_DIR + "/api/classifier.pkl"
+    path = BASE_DIR + "/classifiers/random_forest_classifier.pkl"
     with open(path, 'rb') as f:
         classifier = pickle.load(f)
     data = request.data['image'].split(",")
