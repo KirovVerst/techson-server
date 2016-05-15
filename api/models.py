@@ -11,3 +11,4 @@ class Image(models.Model):
     user = models.ForeignKey(User)
     label = models.PositiveIntegerField()
     datetime = models.DateTimeField(default=timezone.now())
+    data = models.TextField(blank=True, default="")

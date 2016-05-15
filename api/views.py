@@ -94,12 +94,13 @@ def load_image(request):
         destination.close()
 
     except Exception as e:
-        return Response(str(e))
+        return Response(str(e), status=status.HTTP_400_BAD_REQUEST)
 
     user = get_object_or_404(User, id=input_data.data['user'])
 
     image = Image.objects.create(user=user, label=input_data.data['label'],
-                                 new_name=new_name, old_name=old_name, image=file_path)
+                                 new_name=new_name, old_name=old_name,
+                                 image=file_path, data=input_data.data['data'])
 
     return Response(ImageSerializer(image).data)
 
