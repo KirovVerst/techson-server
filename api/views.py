@@ -1,7 +1,6 @@
 from django.shortcuts import get_object_or_404
 
 from rest_framework.decorators import api_view
-from techson_server.settings import BASE_DIR
 from rest_framework.response import Response
 from rest_framework import status, exceptions
 from django.contrib.auth.models import User
@@ -28,7 +27,7 @@ def random_forest(request):
 
 @api_view(['POST'])
 def neural_network(request):
-    path = BASE_DIR + "/classifiers/random_forest_classifier.pkl"
+    path = BASE_DIR + "/classifiers/neural_network_classifier.pkl"
     with open(path, 'rb') as f:
         classifier = pickle.load(f)
     data = request.data['image'].split(",")
@@ -40,7 +39,7 @@ def neural_network(request):
 
 @api_view(['POST'])
 def gradient_boosting(request):
-    path = BASE_DIR + "/classifiers/random_forest_classifier.pkl"
+    path = BASE_DIR + "/classifiers/gradient_boosting_classifier.pkl"
     with open(path, 'rb') as f:
         classifier = pickle.load(f)
     data = request.data['image'].split(",")

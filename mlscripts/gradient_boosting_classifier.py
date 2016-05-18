@@ -10,11 +10,11 @@ train_data = pd.read_csv(path)
 y_train = train_data['label']
 x_train = train_data.drop('label', axis=1)
 
-RFC = RandomForestClassifier(n_estimators=200, n_jobs=-1)
+RFC = RandomForestClassifier(n_estimators=100, n_jobs=-1)
 
 RFC.fit(x_train, y_train)
 
-path = BASE_DIR + '/classifiers/random_forest_classifier.pkl'
+path = BASE_DIR + '/classifiers/gradient_boosting_classifier.pkl'
 
 with open(path, 'wb') as f:
     pickle.dump(RFC, f)
