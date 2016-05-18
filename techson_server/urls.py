@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
-from api.views import random_forest, neural_network, gradient_boosting, users, initial_data, load_image
+from api.views import random_forest, neural_network, gradient_boosting, users, initial_data, load_image, create_dataset
 
 urlpatterns = [
     url('^api/v1/random_forest/$', random_forest),
@@ -24,4 +24,5 @@ urlpatterns = [
     url('^api/v1/users/$', users),
     url('^api/v1/init/$', initial_data),
     url('^api/v1/image/$', load_image),
+    url('^api/v1/dataset/$', create_dataset),
 ]

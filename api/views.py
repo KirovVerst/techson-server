@@ -7,7 +7,7 @@ from rest_framework import status, exceptions
 from django.contrib.auth.models import User
 from api.serializers import UserSerializer, InputDataSerializer, ImageSerializer
 from api.models import Image
-from techson_server.settings import MEDIA_ROOT, UPLOAD_FILE_TYPES
+from techson_server.settings import MEDIA_ROOT, UPLOAD_FILE_TYPES, BASE_DIR
 
 import pickle, json, os, random, string
 
@@ -132,3 +132,22 @@ def validate_file(file_obj):
     else:
         raise exceptions.ValidationError("File type '.%s' is not supported" % file_type)
     return file_type
+
+
+@api_view(["GET"])
+def create_dataset(request):
+    queryset = Image.objects.all()
+    path = BASE_DIR + '/db/dataset/data.csv'
+    with open(path, 'w') as f:
+        headers = 'label'
+        for i in range(1, 251):
+            headers += ',pixel%s' % str(i)
+        f.write(headers)
+
+        for image in queryset:
+            if image.data == "":
+                continue
+            row = '\n' + str(image.label) + ',' + str(image.data)
+            f.write(row)
+
+    return Response()
