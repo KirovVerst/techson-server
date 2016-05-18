@@ -3,7 +3,7 @@ import pickle
 from sklearn.ensemble import RandomForestClassifier
 from techson_server.settings import BASE_DIR
 
-path = BASE_DIR + '/db/csv/train.csv'
+path = BASE_DIR + '/db/dataset/data.csv'
 
 train_data = pd.read_csv(path)
 
@@ -14,7 +14,7 @@ RFC = RandomForestClassifier(n_estimators=200, n_jobs=-1)
 
 RFC.fit(x_train, y_train)
 
-path = BASE_DIR + '/classifiers/random_forest_classifier.pkl'
+path = BASE_DIR + '/classifiers/random_forest_classifier-2.pkl'
 
 with open(path, 'wb') as f:
     pickle.dump(RFC, f)

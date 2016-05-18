@@ -140,7 +140,7 @@ def create_dataset(request):
     path = BASE_DIR + '/db/dataset/data.csv'
     with open(path, 'w') as f:
         headers = 'label'
-        for i in range(1, 251):
+        for i in range(1, 901):
             headers += ',pixel%s' % str(i)
         f.write(headers)
 
